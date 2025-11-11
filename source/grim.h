@@ -26,11 +26,12 @@ private:
 	float velocidadSalto;
 	float pisoY;
 
+	//atributos de sonido
+	Sound salto;
+
 public:
 
 	//constructor
-	//Grim(const string rutaTextura, float escala = 1.0f, float rotacion = 0.0f, bool mostrando = true, Vector2 pos, float vel = 3.0f);
-
 	Grim(const string rutaTextura, Vector2 pos,
 		float escala = 1.0f, float rotacion = 0.0f,
 		bool direccion = true, bool mostrando = true, float vel = 3.0f,

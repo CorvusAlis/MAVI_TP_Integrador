@@ -5,14 +5,14 @@ using namespace std;
 //crear un Grim
 //las variables despues de : inicializan los atributos de clase ANTES de que se ejecute el cuerpo del constr, asi no se repiten asignaciones inncesarias
 //como las variables para el salto son fijas, las asigno en esta lista
-Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, bool direccion, bool mostrando, float vel, bool saltnado, bool subiendo, float alturaSalto, float velocidadSalto, float pisoY)
+Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, bool direccion, bool mostrando, float vel, bool saltando, bool subiendo, float alturaSalto, float velocidadSalto, float pisoY)
     : posicion(pos),
     escala(escala),
     rotacion(rotacion),
     velocidad(vel),
     direccion(direccion),   //para donde mira
     mostrando(mostrando),   //info
-    saltando(subiendo),        //controlan si esta saltando para no spammear el salto en el aire infinitamente
+    saltando(saltando),        //controlan si esta saltando para no spammear el salto en el aire infinitamente
     subiendo(subiendo),
     alturaSalto(alturaSalto),     //cuanto sube - techo de salto en el eje Y
     velocidadSalto(velocidadSalto),    //que "tan rapido" sube o baja - cuantos pixeles incrementa o decrementa en Y por unidad de tiempo
@@ -22,12 +22,16 @@ Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, 
     textura = LoadTexture(rutaTextura.c_str());
     SetTextureFilter(textura, TEXTURE_FILTER_POINT);    //este filtro para pixelart
 
+    //carga de sonidos
+    salto = LoadSound("assets/sound/salto.wav");
+
 }
 
 Grim::~Grim()
 {
     //DESTRUCTOR DE GRIMS!!
     UnloadTexture(textura);
+    UnloadSound(salto);
 }
 
 //render de Grim 
@@ -84,6 +88,7 @@ void Grim::Saltar() {
     if (!saltando) {
         saltando = true;
         subiendo = true;
+        PlaySound(salto);
     }
 }
 

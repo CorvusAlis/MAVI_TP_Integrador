@@ -7,13 +7,14 @@
 
 int main(void)
 {
-
+    //init de pantalla
     InitWindow(1024, 768, "Jumping Grim");
     SetTargetFPS(60);
 
-    //Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float vel, bool mostrando)
+    //init de audio
+    InitAudioDevice();
  
-    Grim grim("assets/grim.png", { 50, 500 }, 0.5f, 10.0f, true);
+    Grim grim("assets/images/grim.png", { 50, 500 }, 0.5f, 0.0f, 10.0f, true);
 
 
     while (!WindowShouldClose())
@@ -25,10 +26,14 @@ int main(void)
             grim.MostrarInfo({ 20,20 });    //muestra las coordenadas actuales de Grim o se ocultan, con la tecla M
 
             ClearBackground(RAYWHITE);
+
             grim.Dibujar();     //render del sprite
 
         EndDrawing();
     }
+
+    //cerrar sist de audio
+    CloseAudioDevice();
 
     CloseWindow();
 
