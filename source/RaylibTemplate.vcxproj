@@ -153,11 +153,17 @@ xcopy "$(SolutionDir)..\lib\vld\64-bit\Microsoft.DTfW.DHL.manifest" "$(OutDir)" 
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="enemigo.cpp" />
     <ClCompile Include="grim.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="meta.cpp" />
+    <ClCompile Include="plataforma.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="enemigo.h" />
     <ClInclude Include="grim.h" />
+    <ClInclude Include="meta.h" />
+    <ClInclude Include="plataforma.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="attributions.txt" />

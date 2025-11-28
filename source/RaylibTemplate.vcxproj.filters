@@ -19,11 +19,29 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="grim.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plataforma.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enemigo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="meta.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plataforma.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enemigo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="meta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
