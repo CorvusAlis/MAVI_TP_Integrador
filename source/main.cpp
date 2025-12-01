@@ -17,7 +17,14 @@ int main(void)
     //init de audio
     InitAudioDevice();
 
-    Grim grim("assets/images/grim.png", { 50, 500 }, 0.5f, 0.0f, 10.0f, true);
+    //variables
+
+    bool victoria = false;
+    bool derrota = false;
+
+    //objetos
+
+    Grim grim("assets/images/grim.png", { 50, 600 }, 0.5f, 0.0f, 10.0f, true);
     Meta meta("assets/images/flame.png", 0.5f, { 700, 500 });
     Plataforma plataformaRota("assets/images/floor-long-ruined.png", 1.0f, { 100,100 });
     Plataforma plataformaSana("assets/images/floor-long-new.png", 1.0f, { 250,300 });
@@ -30,6 +37,14 @@ int main(void)
 
         grim.ActualizarPos();   //control del movimiento en cada frame
 
+        if (grim.GetHitbox().Intersectan(meta.GetHitbox())) {
+            victoria = true;
+        }
+
+        if (grim.GetHitbox().Intersectan(enemigo1.GetHitbox())) {
+            derrota = true;
+        }
+
         BeginDrawing();   
 
             //grim.MostrarInfo({ 20,20 });    //muestra las coordenadas actuales de Grim o se ocultan, con la tecla M
@@ -38,6 +53,9 @@ int main(void)
             plataformaRota.Dibujar();
             plataformaSana.Dibujar();
             enemigo1.Dibujar();
+
+            if (victoria) ClearBackground(LIME);
+            if (derrota) ClearBackground(RED);
 
         EndDrawing();
     }

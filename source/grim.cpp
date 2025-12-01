@@ -16,8 +16,9 @@ Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, 
     subiendo(subiendo),
     alturaSalto(alturaSalto),     //cuanto sube - techo de salto en el eje Y
     velocidadSalto(velocidadSalto),    //que "tan rapido" sube o baja - cuantos pixeles incrementa o decrementa en Y por unidad de tiempo
-    pisoY(pisoY)          //piso inferior
-{
+    pisoY(pisoY),          //piso inferior
+    hitbox(120, 155, { 35, 30 }, true)   //inicializa una hitbox
+{       
     //carga de ruta de textura y filtro
     textura = LoadTexture(rutaTextura.c_str());
     SetTextureFilter(textura, TEXTURE_FILTER_POINT);    //este filtro para pixelart
@@ -53,13 +54,14 @@ void Grim::Dibujar()
     //con WHITE en Color se muestra el color original de la imagen
     DrawTexturePro(textura, grim, dest, origen, rotacion, WHITE);
 
-    //con DrawTexturePro se puede renderizar una imagen completa o una parte (VER PARA SPRITE SHEETS)
+    hitbox.Draw();  //debug
 }
 
 void Grim::Mover(float x, float y)
 {
     posicion.x += x;
     posicion.y += y;
+
 }
 
 void Grim::ActualizarPos() {
@@ -79,6 +81,8 @@ void Grim::ActualizarPos() {
     }
 
     if (IsKeyPressed(KEY_R)) { ReiniciarPos(); }
+
+    hitbox.Sincro(posicion);    //sincronizo la hbox y la posicion DESPUES de mover o saltar
 
 }
 
@@ -124,7 +128,7 @@ void Grim::Salto(){
 
 void Grim::ReiniciarPos() {
 
-    SetPosicion({ 50, 500 });
+    SetPosicion({ 50, 600 });
     direccion = true; //lo pongo mirando a la derecha, por si se reinicia mirando a la izquierda
 
 }

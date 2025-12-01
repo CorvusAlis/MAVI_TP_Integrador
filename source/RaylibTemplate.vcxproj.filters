@@ -30,6 +30,9 @@
     <ClCompile Include="meta.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hitbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grim.h">
@@ -50,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="attributions.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="notes.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

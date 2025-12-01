@@ -20,7 +20,7 @@ Rectangle Hitbox::Getbox() const
     return hbox;
 }
 
-bool Hitbox::Intersectan(const Hitbox& objeto)
+bool Hitbox::Intersectan(const Hitbox& objeto) const
 {
     return CheckCollisionRecs(hbox, objeto.hbox);   //detecta la colision entre el objeto que tiene la hitbox, y la hitbox de otro objeto
 }

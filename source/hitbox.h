@@ -17,7 +17,7 @@ public:
 
 	Rectangle Getbox() const;	//devuelve hbox actual
 
-	bool Intersectan(const Hitbox& objeto);
+	bool Intersectan(const Hitbox& objeto) const;	//es const por que solo devuelve informacion, no modifica
 
 	//debug
 	void Draw() const;

@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "hitbox.h"
 #include <string>
 
 using namespace std;
@@ -24,6 +25,8 @@ private:
 
 	Rectangle source; //rectangulo que se va a "pintar" con los sprites.
 
+	Hitbox hitbox;
+
 public:
 
 	//constructor y destructor
@@ -31,4 +34,6 @@ public:
 	~Meta();
 
 	void Dibujar();
+
+	const Hitbox& GetHitbox() const { return hitbox; }
 };

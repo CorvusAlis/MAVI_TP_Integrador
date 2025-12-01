@@ -1,5 +1,7 @@
 #pragma once
 #include "raylib.h"
+#include "hitbox.h"
+
 #include <string>
 
 using namespace std;
@@ -29,6 +31,9 @@ private:
 	//atributos de sonido
 	Sound salto;
 
+	//hitbox
+	Hitbox hitbox;
+
 public:
 
 	//constructor
@@ -36,7 +41,7 @@ public:
 		float escala = 1.0f, float rotacion = 0.0f,
 		bool direccion = true, bool mostrando = true, float vel = 3.0f,
 		bool saltando = false, bool subiendo = false,
-		float alturaSalto = 125.0f, float velocidadSalto = 7.0f, float pisoY = 500.0f);
+		float alturaSalto = 125.0f, float velocidadSalto = 7.0f, float pisoY = 600.0f);
 
 
 	//destructor
@@ -46,9 +51,9 @@ public:
 
 	void Mover(float x, float y);
 
-	void Saltar();
+	void Saltar();	//control del salto
 	
-	void Salto();
+	void Salto();	//logica del salto
 
 	void ReiniciarPos();
 
@@ -61,4 +66,6 @@ public:
 	void MostrarInfo(Vector2 posicionInf);	//mostrar y ocultar coordenadas de posicion con M
 
 	Vector2 GetPosicion() const; //devuelve la posicion actual de la imagen
+
+	const Hitbox& GetHitbox() const { return hitbox; }	//devuelve la hitbox para manejar colisiones con otros objetos
 };

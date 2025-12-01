@@ -3,7 +3,8 @@
 using namespace std;
 
 Meta::Meta(const string rutaTextura, float escala, Vector2 posicion) :
-	escala(escala), posicion(posicion)
+	escala(escala), posicion(posicion),
+	hitbox(60, 70, { 10, 0 }, true)
 {
 	textura = LoadTexture(rutaTextura.c_str());
 	SetTextureFilter(textura, TEXTURE_FILTER_POINT);
@@ -46,5 +47,9 @@ void Meta::Dibujar() {
 	Vector2 origin = { 0,0 };
 
 	DrawTexturePro(textura, source, dest, origin, 0.0f, WHITE);
+
+	hitbox.Sincro(posicion);
+
+	hitbox.Draw(); //debug
 
 }

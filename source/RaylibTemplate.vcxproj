@@ -155,6 +155,7 @@ xcopy "$(SolutionDir)..\lib\vld\64-bit\Microsoft.DTfW.DHL.manifest" "$(OutDir)" 
   <ItemGroup>
     <ClCompile Include="enemigo.cpp" />
     <ClCompile Include="grim.cpp" />
+    <ClCompile Include="hitbox.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="meta.cpp" />
     <ClCompile Include="plataforma.cpp" />
@@ -168,6 +169,7 @@ xcopy "$(SolutionDir)..\lib\vld\64-bit\Microsoft.DTfW.DHL.manifest" "$(OutDir)" 
   </ItemGroup>
   <ItemGroup>
     <Text Include="attributions.txt" />
+    <Text Include="notes.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
