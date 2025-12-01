@@ -1,0 +1,8 @@
+Clase hitbox
+
+*Si bien este proyecto es pequeño, decidi usar una clase hitbox para entender el funcionamiento en futuros proyectos
+
+*Es mejor usar una clase hitbox para controlar las colisiones, y no incorporar un rectangulo del tamaño del sprite directamente en la clase. 
+*Se puede controlar mejor la colision de objetos, y dar reglas mas detalladas a las hitbox. 
+*Se pueden reutilizar hitbox para clases similares.
+*Es escalable y mas flexible. 

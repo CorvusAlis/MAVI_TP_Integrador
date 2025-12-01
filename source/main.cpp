@@ -21,7 +21,7 @@ int main(void)
     Meta meta("assets/images/flame.png", 0.5f, { 700, 500 });
     Plataforma plataformaRota("assets/images/floor-long-ruined.png", 1.0f, { 100,100 });
     Plataforma plataformaSana("assets/images/floor-long-new.png", 1.0f, { 250,300 });
-    Enemigo enemigo1("assets/images/enemy-wings.png", 0.5f, { 750, 120 });
+    Enemigo enemigo1("assets/images/enemy-wings.png", 0.5f, { 300, 500 });
     
 
     while (!WindowShouldClose())

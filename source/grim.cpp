@@ -69,11 +69,11 @@ void Grim::ActualizarPos() {
     Salto();    //accion efectiva del salto
 
     //movimiento con las flechas del teclado
-    if (IsKeyDown(KEY_RIGHT)) { 
+    if (((IsKeyDown(KEY_RIGHT)) || (IsKeyDown(KEY_D)))) {
         Mover(velocidad, 0); 
         direccion = true;
     }
-    if (IsKeyDown(KEY_LEFT)) {
+    if (((IsKeyDown(KEY_LEFT)) || (IsKeyDown(KEY_A)))){
         Mover(-velocidad, 0);
         direccion = false;
     }

@@ -162,6 +162,7 @@ xcopy "$(SolutionDir)..\lib\vld\64-bit\Microsoft.DTfW.DHL.manifest" "$(OutDir)" 
   <ItemGroup>
     <ClInclude Include="enemigo.h" />
     <ClInclude Include="grim.h" />
+    <ClInclude Include="hitbox.h" />
     <ClInclude Include="meta.h" />
     <ClInclude Include="plataforma.h" />
   </ItemGroup>
