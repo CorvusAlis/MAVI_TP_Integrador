@@ -28,22 +28,29 @@ int main(void)
     Meta meta("assets/images/flame.png", 0.5f, { 700, 500 });
     Plataforma plataformaRota("assets/images/floor-long-ruined.png", 1.0f, { 100,100 });
     Plataforma plataformaSana("assets/images/floor-long-new.png", 1.0f, { 250,300 });
-    Enemigo enemigo1("assets/images/enemy-wings.png", 0.5f, { 300, 500 });
-    
+
+    //Enemigo(const string rutaTextura, float escala, Vector2 puntoA, Vector2 puntoB, float velocidad);
+    Enemigo eHorizontal("assets/images/enemy-wings.png", 0.5f, { 450, 200 }, { 1700, 200 }, 150);
+    Enemigo eVertical("assets/images/enemy-wings.png", 0.5f, { 300, 100 }, { 300, 800 }, 120);
+    Enemigo eDiagonal("assets/images/enemy-wings.png", 0.5f, { 1000, 300 }, { 1700, 800 }, 130);
 
     while (!WindowShouldClose())
     {
         ClearBackground(RAYWHITE);
+        float dTime = GetFrameTime();
 
         grim.ActualizarPos();   //control del movimiento en cada frame
+        eHorizontal.ActualizarPos(dTime);
+        eVertical.ActualizarPos(dTime);
+        eDiagonal.ActualizarPos(dTime);
 
         if (grim.GetHitbox().Intersectan(meta.GetHitbox())) {
             victoria = true;
         }
 
-        if (grim.GetHitbox().Intersectan(enemigo1.GetHitbox())) {
-            derrota = true;
-        }
+        //if (grim.GetHitbox().Intersectan(enemigo1.GetHitbox())) {
+        //    derrota = true;
+        //}
 
         BeginDrawing();   
 
@@ -52,7 +59,9 @@ int main(void)
             meta.Dibujar();
             plataformaRota.Dibujar();
             plataformaSana.Dibujar();
-            enemigo1.Dibujar();
+            eHorizontal.Dibujar();
+            eVertical.Dibujar();
+            eDiagonal.Dibujar();
 
             if (victoria) ClearBackground(LIME);
             if (derrota) ClearBackground(RED);
