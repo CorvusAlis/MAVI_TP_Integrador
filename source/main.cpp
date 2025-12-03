@@ -8,13 +8,17 @@
 #include "plataforma.h"
 #include "enemigo.h"
 
+//funcion para controlar colisiones y condicion de victoria/derrota
+bool CheckColision(const Hitbox& a, const Hitbox& b)
+{
+    return a.Intersectan(b);
+}
+
+
 int main(void)
 {
-    //init de pantalla
     InitWindow(1900, 1000, "Jumping Grim");
     SetTargetFPS(60);
-
-    //init de audio
     InitAudioDevice();
 
     //variables
@@ -26,6 +30,8 @@ int main(void)
 
     Grim grim("assets/images/grim.png", { 50, 600 }, 0.5f, 0.0f, 10.0f, true);
     Meta meta("assets/images/flame.png", 0.5f, { 700, 500 });
+
+    //Plataforma(const string rutaTextura, float escala, Vector2 posicion);
     Plataforma plataformaRota("assets/images/floor-long-ruined.png", 1.0f, { 100,100 });
     Plataforma plataformaSana("assets/images/floor-long-new.png", 1.0f, { 250,300 });
 
@@ -44,13 +50,20 @@ int main(void)
         eVertical.ActualizarPos(dTime);
         eDiagonal.ActualizarPos(dTime);
 
-        if (grim.GetHitbox().Intersectan(meta.GetHitbox())) {
-            victoria = true;
+        //control de derrota
+        if (
+            CheckColision(grim.GetHitbox(), eHorizontal.GetHitbox()) ||
+            CheckColision(grim.GetHitbox(), eVertical.GetHitbox()) ||
+            CheckColision(grim.GetHitbox(), eDiagonal.GetHitbox())
+            )
+        {
+            derrota = true;
         }
 
-        //if (grim.GetHitbox().Intersectan(enemigo1.GetHitbox())) {
-        //    derrota = true;
-        //}
+        //control de victoria
+        if (CheckColision(grim.GetHitbox(), meta.GetHitbox())) {
+            victoria = true;
+        }
 
         BeginDrawing();   
 
@@ -69,9 +82,7 @@ int main(void)
         EndDrawing();
     }
 
-    //cerrar sist de audio
     CloseAudioDevice();
-
     CloseWindow();
 
     return 0;

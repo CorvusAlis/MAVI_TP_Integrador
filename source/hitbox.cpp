@@ -1,10 +1,10 @@
 #include "Hitbox.h"
 
 Hitbox::Hitbox(float ancho, float alto, Vector2 off, bool dbg)
-    : hbox{ 0, 0, ancho, alto }, 
-    offset(off), 
+    :offset(off), 
     debug(dbg)
 {
+    hbox = { 0, 0, ancho, alto };
 }
 
 void Hitbox::Sincro(Vector2 posSprite)
@@ -24,6 +24,54 @@ bool Hitbox::Intersectan(const Hitbox& objeto) const
 {
     return CheckCollisionRecs(hbox, objeto.hbox);   //detecta la colision entre el objeto que tiene la hitbox, y la hitbox de otro objeto
 }
+
+//colisiones
+
+bool Hitbox::ColisionaArriba(const Hitbox& objeto) const {
+
+    if (!Intersectan(objeto)) return false;
+
+    const float margen = 5.0f;  // margen de tolerancia de colision
+
+    return bottom() > objeto.top() &&
+        top() < objeto.top() &&
+        (bottom() - objeto.top()) < margen;
+}
+
+bool Hitbox::ColisionaAbajo(const Hitbox& objeto) const {
+
+    if (!Intersectan(objeto)) return false;
+
+    const float margen = 5.0f;
+
+    return top() < objeto.bottom() &&
+        bottom() > objeto.bottom() &&
+        (objeto.bottom() - top()) < margen;
+}
+
+bool Hitbox::ColisionaIzquierda(const Hitbox& objeto) const {
+
+    if (!Intersectan(objeto)) return false;
+
+    const float margen = 5.0f;
+
+    return right() > objeto.left() &&
+        left() < objeto.left() &&
+        (right() - objeto.left()) < margen;
+}
+
+bool Hitbox::ColisionaDerecha(const Hitbox& objeto) const {
+
+    if (!Intersectan(objeto)) return false;
+
+    const float margen = 5.0f;
+
+    return left() < objeto.right() &&
+        right() > objeto.right() &&
+        (objeto.right() - left()) < margen;
+}
+
+//debug
 
 void Hitbox::Draw() const
 {
