@@ -24,5 +24,5 @@ void Plataforma::Dibujar(){
 
 	hitbox.Sincro(posicion);
 
-	hitbox.Draw();
+	//hitbox.Draw();
 }

@@ -21,8 +21,9 @@ Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, 
     posInicioSalto(pos.y),
     enPlataforma(false),
     velocidadY(0.0f),
-    gravedad(0.5f),
-    hitbox(120, 155, { 35, 30 }, true)   //inicializa una hitbox
+    velocidadX(0.0f),
+    gravedad(0.25f),
+    hitbox(100, 120, { 35, 30 }, true)   //inicializa hitbox
 {       
     //carga de ruta de textura y filtro
     textura = LoadTexture(rutaTextura.c_str());
@@ -59,31 +60,35 @@ void Grim::Dibujar()
     //con WHITE en Color se muestra el color original de la imagen
     DrawTexturePro(textura, grim, dest, origen, rotacion, WHITE);
 
-    hitbox.Draw();  //debug
+    //hitbox.Draw();  //debug
 }
 
-void Grim::Mover(float x, float y)
-{
-    posicion.x += x;
-    posicion.y += y;
-
-}
+//deprecado - rompe las colisiones - ahora se usa velocidadX y velocidadY para mejores calculos
+//void Grim::Mover(float x, float y)
+//{
+//    posicion.x += x;
+//    posicion.y += y;
+//
+//}
 
 void Grim::ActualizarPos(const Plataforma plataformas[], int cantidad) {
 
+    velocidadX = 0.0f;
     enPlataforma = false;
 
     if (IsKeyPressed(KEY_SPACE) && !saltando) Saltar(); //trigger del salto
     Salto();    //accion efectiva del salto
 
     if (((IsKeyDown(KEY_RIGHT)) || (IsKeyDown(KEY_D)))) {
-        Mover(velocidad, 0); 
+        velocidadX = velocidad;
         direccion = true;
     }
     if (((IsKeyDown(KEY_LEFT)) || (IsKeyDown(KEY_A)))){
-        Mover(-velocidad, 0);
+        velocidadX = -velocidad;
         direccion = false;
     }
+
+    posicion.x += velocidadX;
 
     if (IsKeyPressed(KEY_R)) { ReiniciarPos(); }
 
@@ -111,7 +116,7 @@ void Grim::ActualizarPos(const Plataforma plataformas[], int cantidad) {
         pisoActual = pisoBase;
     }
 
-    //para evitar que se vaya por lo laterales
+    //para evitar que se vaya por los laterales
     float margenIzq = 15.0f;
     float margenDer = GetScreenWidth() - 25.0f;
 
@@ -161,27 +166,43 @@ void Grim::ColisionPlataforma(const Plataforma& plataforma)
     }
 
     //choca contra el techo, no permite atravesar desde abajo
-    if (velocidadY < 0 && arribaGrim >= abajoPlat - overlapY)
+    if (velocidadY < 0)
     {
-        posicion.y += overlapY;
-        velocidadY = 0;
-        subiendo = false;
-        hitbox.Sincro(posicion);
-        return;
+        //cuánto se metió Grim dentro del techo
+        float penetracion = abajoPlat - arribaGrim;
+
+        //si hay penetración (penetracion > 0) significa que Grim está metiéndose en el techo
+        if (penetracion > 0 && abajoGrim > abajoPlat)
+        {
+            //corregir posición empujando hacia abajo
+            posicion.y += penetracion;
+
+            velocidadY = 0;
+            subiendo = false;
+
+            hitbox.Sincro(posicion);
+            return;
+        }
     }
 
     //colision izquierda
-    if (rGrim.x + rGrim.width > rPlat.x && rGrim.x < rPlat.x)
+    if (velocidadX > 0 &&
+        rGrim.x + rGrim.width > rPlat.x &&
+        rGrim.x < rPlat.x)
     {
-        posicion.x = rPlat.x - rGrim.width - 30.0f;
+        posicion.x = rPlat.x - rGrim.width;
+        velocidadX = 0;
         hitbox.Sincro(posicion);
         return;
     }
 
     //colision derecha - rebota (falta ver alguna solucion para esto)
-    if (rGrim.x < rPlat.x + rPlat.width && rGrim.x + rGrim.width > rPlat.x + rPlat.width)
+    if (velocidadX < 0 &&
+        rGrim.x < rPlat.x + rPlat.width &&
+        rGrim.x + rGrim.width > rPlat.x + rPlat.width)
     {
         posicion.x = rPlat.x + rPlat.width;
+        velocidadX = 0;
         hitbox.Sincro(posicion);
         return;
     }

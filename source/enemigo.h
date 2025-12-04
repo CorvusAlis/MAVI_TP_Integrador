@@ -30,4 +30,15 @@ public:
 	void ActualizarPos(float dTime);
 
 	const Hitbox& GetHitbox() const { return hitbox; }
+
+	Vector2 GetPuntoA() const { return puntoA; }
+	Vector2 GetPuntoB() const { return puntoB; }
+
+	void SetPuntos(Vector2 a, Vector2 b) {
+		puntoA = a;
+		puntoB = b;
+	}
+
+	void Resetear();   // volvemos a puntoA y dirección inicial
+
 };

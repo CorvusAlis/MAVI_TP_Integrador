@@ -35,7 +35,7 @@ void Enemigo::ActualizarPos(float dTime)
     //distancia al objetivo - "largo" del vector
     float dist = sqrtf(delta.x * delta.x + delta.y * delta.y);
 
-    if (dist < 1.0f) {
+    if (dist < velocidad * dTime) {
         posicion = objetivo;
         direccion *= -1;    // invertir dirección
         return;
@@ -55,6 +55,13 @@ void Enemigo::Dibujar() {
 
 	DrawTextureEx(textura, { posicion.x, posicion.y }, 0.0f, escala, WHITE);
 
-	hitbox.Draw();
+	//hitbox.Draw();
 
+}
+
+void Enemigo::Resetear()
+{
+    posicion = puntoA;
+    direccion = 1;      // comienza yendo hacia puntoB
+    hitbox.Sincro(posicion);
 }

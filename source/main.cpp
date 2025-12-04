@@ -7,6 +7,7 @@
 #include "meta.h"
 #include "plataforma.h"
 #include "enemigo.h"
+#include "pantallas.h"
 
 //funcion para controlar colisiones y condicion de victoria/derrota
 bool CheckColision(const Hitbox& a, const Hitbox& b)
@@ -17,100 +18,160 @@ bool CheckColision(const Hitbox& a, const Hitbox& b)
 
 int main(void)
 {
-    InitWindow(1900, 1000, "Jumping Grim");
+    InitWindow(1900, 1000, "Grim: El atrapa-almas");
     SetTargetFPS(60);
     InitAudioDevice();
 
-    //variables
+    //pantallas
+    Pantallas pantallas;
+    pantallas.SetEstado(MENU); //inicia mostrando el menu principal
 
+    //variables
+    float offsetArriba = 200.0f;
     bool victoria = false;
     bool derrota = false;
 
     //objetos
 
-    Grim grim("assets/images/grim.png", { 300, 500 },
-        0.5f,          // escala
+    Grim grim("assets/images/grim.png", { 840, 750 },
+        0.4f,          // escala
         0.0f,          // rotación
         true,          // dirección
         true,          // mostrar info
-        10.0f,         // velocidad
+        3.0f,          // velocidad
         false,         // saltando
         false,         // subiendo
-        150.0f,        // alturaSalto
-        7.0f,          // velocidadSalto
-        900.0f        // pisoBase
+        180.0f,        // alturaSalto
+        5.0f,          // velocidadSalto
+        940.0f         // pisoBase
     );
 
-    Meta meta("assets/images/flame.png", 0.5f, { 950, 570 });
+    Meta meta("assets/images/flame.png", 0.5f, { 840, 320 - offsetArriba });
 
     //Plataforma(const string rutaTextura, float escala, Vector2 posicion);
     Plataforma plataformas[10] = {
 
-        // --- NIVEL 1 (Cerca del piso, más separados) ---
-        {"assets/images/floor-long-new.png",     1.0f, {   80, 900 }},
-        {"assets/images/floor-short-ruined.png", 1.0f, {  900, 880 }},
-        {"assets/images/floor-long-ruined.png",  1.0f, { 1700, 910 }},
+        //nivel 1
+        {"assets/images/floor-long-new.png",     1.0f, { 200, 920 - offsetArriba }},   // 730
+        {"assets/images/floor-long-ruined.png",  1.0f, { 750, 900 - offsetArriba }},   // 740
+        {"assets/images/floor-long-new.png",     1.0f, {1300, 920 - offsetArriba }},   // 730
 
-        // --- NIVEL 2 (subido y más espaciado) ---
-        {"assets/images/floor-short-new.png",    1.0f, {  200, 740 }},
-        {"assets/images/floor-long-new.png",     1.0f, { 1050, 720 }},
-        {"assets/images/floor-short-ruined.png", 1.0f, { 1850, 740 }},
+        //nivel 2
+        {"assets/images/floor-short-new.png",    1.0f, { 150, 690 - offsetArriba }},   // 540
+        {"assets/images/floor-short-ruined.png", 1.0f, {1550, 690 - offsetArriba }},   // 540
 
-        // --- NIVEL 3 (más altos y separados) ---
-        {"assets/images/floor-short-new.png",    1.0f, {  150, 580 }},
-        {"assets/images/floor-long-ruined.png",  1.0f, { 1100, 560 }},
-        {"assets/images/floor-short-new.png",    1.0f, { 1950, 580 }},
+        {"assets/images/floor-long-new.png",     1.0f, { 600, 670 - offsetArriba }},   // 520
+        {"assets/images/floor-long-new.png",     1.0f, {1100, 670 - offsetArriba }},   // 520
 
-        // --- NIVEL 4 (superior, más arriba) ---
-        {"assets/images/floor-long-new.png",     1.0f, {  700, 380 }}
+        //nivel 3
+        {"assets/images/floor-short-ruined.png", 1.0f, { 400, 480 - offsetArriba }},   // 330
+        {"assets/images/floor-short-ruined.png", 1.0f, {1300, 480 - offsetArriba }},   // 330
+
+        {"assets/images/floor-long-new.png",     1.0f, { 750, 460 - offsetArriba }},   // 310
+    };
+
+    Plataforma piso[8] = {
+        {"assets/images/floor-long-new.png", 1.0f, {   0, 940 }},
+        {"assets/images/floor-long-new.png", 1.0f, { 256, 940 }},
+        {"assets/images/floor-long-new.png", 1.0f, { 512, 940 }},
+        {"assets/images/floor-long-new.png", 1.0f, { 768, 940 }},
+        {"assets/images/floor-long-new.png", 1.0f, {1024, 940 }},
+        {"assets/images/floor-long-new.png", 1.0f, {1280, 940 }},
+        {"assets/images/floor-long-new.png", 1.0f, {1536, 940 }},
+        {"assets/images/floor-long-new.png", 1.0f, {1900 - 256, 940 }}
     };
 
     //Enemigo(const string rutaTextura, float escala, Vector2 puntoA, Vector2 puntoB, float velocidad);
-    Enemigo enemigos[3] = {
-    {"assets/images/enemy-wings.png", 0.5f, { 450, 200 }, { 1700, 200 }, 150},
-    {"assets/images/enemy-wings.png", 0.5f, { 300, 100 }, { 300, 800 }, 120},
-    {"assets/images/enemy-wings.png", 0.5f, { 1000, 300 }, { 1700, 800 }, 130}
+    Enemigo enemigos[4] = {
+        //Enemigo diagonal 1
+        { "assets/images/enemy-wings.png", 0.5f, { 200, 150 }, { 1700, 750 }, 250 },
+        //Enemigo diagonal 2
+        { "assets/images/enemy-wings.png", 0.5f, { 1700, 150 }, { 200, 750 }, 250 },
+        //Enemigo vertical (centro)
+        { "assets/images/enemy-wings.png", 0.5f, { 950, 150 }, { 950, 850 }, 150 },
+        //Enemigo horizontal (superior)
+        { "assets/images/enemy-wings.png", 0.5f,{ 200, 120 }, { 1700, 120 }, 140 }
     };
+
+    //guardo las posiciones para el rinicio del juego
+    Vector2 enemigosPosA[4];
+    Vector2 enemigosPosB[4];
+
+    for (int i = 0; i < 4; i++) {
+        enemigosPosA[i] = enemigos[i].GetPuntoA();
+        enemigosPosB[i] = enemigos[i].GetPuntoB();
+    }
+
+    //LOOP DE JUEGO//
 
     while (!WindowShouldClose())
     {
-        ClearBackground(RAYWHITE);
         float dTime = GetFrameTime();
 
-        grim.ActualizarPos(plataformas, 10);
+        if (pantallas.GetEstado() == JUEGO)
+        {
+            grim.ActualizarPos(plataformas, 10);
+            grim.ActualizarPos(piso, 8);
 
-        for (int i = 0; i < 3; i++) {
-            enemigos[i].ActualizarPos(dTime);
-        }
-
-        //control de derrota
-        for (int i = 0; i < 3; i++) {
-            if (CheckColision(grim.GetHitbox(), enemigos[i].GetHitbox()))
-            derrota = true;
-        }
-
-        //control de victoria
-        if (CheckColision(grim.GetHitbox(), meta.GetHitbox())) {
-            victoria = true;
-        }
-
-        BeginDrawing();   
-
-            //grim.MostrarInfo({ 20,20 });    //muestra las coordenadas actuales de Grim o se ocultan, con la tecla M
-            grim.Dibujar();
-            meta.Dibujar();
-
-            for (int i = 0; i < 10; i++) {
-                plataformas[i].Dibujar();
+            for (int i = 0; i < 4; i++) {
+                enemigos[i].ActualizarPos(dTime);
             }
 
             for (int i = 0; i < 3; i++) {
-                enemigos[i].Dibujar();
+                if (CheckColision(grim.GetHitbox(), enemigos[i].GetHitbox()))
+                {
+                    pantallas.SetEstado(DERROTA);
+                }
             }
 
-            if (victoria) ClearBackground(LIME);
-            else 
-            if (derrota) ClearBackground(RED);
+            if (CheckColision(grim.GetHitbox(), meta.GetHitbox()))
+            {
+                pantallas.SetEstado(VICTORIA);
+            }
+        }
+
+        //REINICIO DE JUEGO
+        if (pantallas.reiniciarJuego)
+        {
+            //Reiniciar posicion de Grim
+            grim.SetPosicion({ 300, 500 });
+
+            //Reiniciar posicion de enemigos
+            for (int i = 0; i < 4; i++) {
+                enemigos[i].SetPuntos(enemigosPosA[i], enemigosPosB[i]);  // NUEVO MÉTODO
+                enemigos[i].Resetear(); // vuelve dirección y posición exacta
+            }
+
+            pantallas.reiniciarJuego = false;
+            pantallas.SetEstado(JUEGO);
+        }
+
+        //RENDER//
+
+        BeginDrawing();   
+        ClearBackground(RAYWHITE);
+        
+        //posibles estados de juego y render de pantallas
+        switch (pantallas.GetEstado())
+        {
+        case MENU:
+            pantallas.DibujarMenu();
+            break;
+
+        case JUEGO:
+            grim.Dibujar();
+            meta.Dibujar();
+
+            for (int i = 0; i < 10; i++) plataformas[i].Dibujar();
+            for (int i = 0; i < 8; i++) piso[i].Dibujar();
+            for (int i = 0; i < 4; i++) enemigos[i].Dibujar();
+            break;
+
+        case VICTORIA:
+        case DERROTA:
+            pantallas.Dibujar();  // muestra pantalla correspondiente
+            break;
+        }
 
         EndDrawing();
     }

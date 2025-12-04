@@ -28,7 +28,8 @@ private:
 	float alturaSalto;
 	float velocidadSalto;
 	float velocidadY;   // velocidad vertical actual
-	float gravedad;     // aceleración hacia abajo
+	float velocidadX;	//velocidad horizontal actual
+	float gravedad;     // aceleración hacia abajo ("peso")
 	float posInicioSalto;
 	float pisoBase;
 	float pisoActual;
@@ -45,9 +46,9 @@ public:
 	//constructor
 	Grim(const string rutaTextura, Vector2 pos,
 		float escala = 1.0f, float rotacion = 0.0f,
-		bool direccion = true, bool mostrando = true, float vel = 3.0f,
+		bool direccion = true, bool mostrando = true, float vel = 6.0f,
 		bool saltando = false, bool subiendo = false,
-		float alturaSalto = 125.0f, float velocidadSalto = 7.0f, float pisoBase = 700.0f);
+		float alturaSalto = 125.0f, float velocidadSalto = 7.0f, float pisoBase = 940.0f);
 
 
 	//destructor
@@ -55,7 +56,7 @@ public:
 
 	void Dibujar();	//render de la imagen
 
-	void Mover(float x, float y);
+	//void Mover(float x, float y);	//deprecado
 
 	void Saltar();	//control del salto
 	

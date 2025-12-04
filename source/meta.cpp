@@ -50,6 +50,6 @@ void Meta::Dibujar() {
 
 	hitbox.Sincro(posicion);
 
-	hitbox.Draw(); //debug
+	//hitbox.Draw(); //debug
 
 }
