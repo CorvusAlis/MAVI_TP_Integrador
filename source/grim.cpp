@@ -1,11 +1,11 @@
-#include "Grim.h"
+Ôªø#include "Grim.h"
 
 using namespace std;
 
 //crear un Grim
 //las variables despues de : inicializan los atributos de clase ANTES de que se ejecute el cuerpo del constr, asi no se repiten asignaciones inncesarias
 //como las variables para el salto son fijas, las asigno en esta lista
-Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, bool direccion, bool mostrando, float vel, bool saltando, bool subiendo, float alturaSalto, float velocidadSalto, float pisoY)
+Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, bool direccion, bool mostrando, float vel, bool saltando, bool subiendo, float alturaSalto, float velocidadSalto, float pisoBase)
     : posicion(pos),
     escala(escala),
     rotacion(rotacion),
@@ -16,7 +16,12 @@ Grim::Grim(const string rutaTextura, Vector2 pos, float escala, float rotacion, 
     subiendo(subiendo),
     alturaSalto(alturaSalto),     //cuanto sube - techo de salto en el eje Y
     velocidadSalto(velocidadSalto),    //que "tan rapido" sube o baja - cuantos pixeles incrementa o decrementa en Y por unidad de tiempo
-    pisoY(pisoY),          //piso inferior
+    pisoBase(pisoBase),
+    pisoActual(pisoBase),
+    posInicioSalto(pos.y),
+    enPlataforma(false),
+    velocidadY(0.0f),
+    gravedad(0.5f),
     hitbox(120, 155, { 35, 30 }, true)   //inicializa una hitbox
 {       
     //carga de ruta de textura y filtro
@@ -40,10 +45,10 @@ Grim::~Grim()
 void Grim::Dibujar()
 {   
     //dibuja todo el ancho y alto de la imagen "textura" (el sprite) y lo renderiza desde el pixel(?) 0,0
-    //osea crea un cuadrado con el tamaÒo del sprite
+    //osea crea un cuadrado con el tama√±o del sprite
     Rectangle grim = { 0, 0, (float)textura.width, (float)textura.height };
 
-    //controlo para donde esta mirando, e invierte el ancho del rect·ngulo fuente (grim), la imagen queda "espejada", segun a donde mire
+    //controlo para donde esta mirando, e invierte el ancho del rect√°ngulo fuente (grim), la imagen queda "espejada", segun a donde mire
     if (!direccion)
         grim.width = -grim.width;
 
@@ -64,13 +69,13 @@ void Grim::Mover(float x, float y)
 
 }
 
-void Grim::ActualizarPos() {
+void Grim::ActualizarPos(const Plataforma plataformas[], int cantidad) {
 
-    //salto con barra espaciadora
+    enPlataforma = false;
+
     if (IsKeyPressed(KEY_SPACE) && !saltando) Saltar(); //trigger del salto
     Salto();    //accion efectiva del salto
 
-    //movimiento con las flechas del teclado
     if (((IsKeyDown(KEY_RIGHT)) || (IsKeyDown(KEY_D)))) {
         Mover(velocidad, 0); 
         direccion = true;
@@ -82,8 +87,104 @@ void Grim::ActualizarPos() {
 
     if (IsKeyPressed(KEY_R)) { ReiniciarPos(); }
 
-    hitbox.Sincro(posicion);    //sincronizo la hbox y la posicion DESPUES de mover o saltar
+    if (!subiendo && !enPlataforma)
+        velocidadY += gravedad;
+    else if (enPlataforma)
+        velocidadY = 0;
 
+    posicion.y += velocidadY;
+
+    hitbox.Sincro(posicion);
+
+    for (int i = 0; i < cantidad; i++)
+    {
+        ColisionPlataforma(plataformas[i]);
+    }
+
+    //para que no pase de largo en el borde inferior
+    if (posicion.y + hitbox.Getbox().height > pisoBase) {
+        posicion.y = pisoBase - hitbox.Getbox().height;
+        velocidadY = 0;
+        subiendo = false;
+        saltando = false;
+        enPlataforma = true;
+        pisoActual = pisoBase;
+    }
+
+    //para evitar que se vaya por lo laterales
+    float margenIzq = 15.0f;
+    float margenDer = GetScreenWidth() - 25.0f;
+
+    float anchoGrim = hitbox.Getbox().width;
+
+    //evita que se salga por la izquierda
+    if (posicion.x < margenIzq)
+        posicion.x = margenIzq;
+
+    //evita que se salga por la derecha
+    if (posicion.x + anchoGrim > margenDer)
+        posicion.x = margenDer - anchoGrim;
+
+    hitbox.Sincro(posicion); 
+}
+
+void Grim::ColisionPlataforma(const Plataforma& plataforma)
+{
+    const Hitbox& hbPlat = plataforma.GetHitbox();
+
+    //mejora de colisiones y hitbox
+    Rectangle rPlat = hbPlat.Getbox();
+    Rectangle rGrim = hitbox.Getbox();
+
+    if (!hitbox.Intersectan(hbPlat))
+        return;
+    
+    //auxiliares
+    float arribaGrim = rGrim.y;
+    float abajoGrim = rGrim.y + rGrim.height;
+    float arribaPlat = rPlat.y;
+    float abajoPlat = rPlat.y + rPlat.height;
+
+    float overlapY = min(abajoGrim, abajoPlat) - max(arribaGrim, arribaPlat);
+
+    //pisa la plataforma - no pasa de largo
+    if (velocidadY > 0 && abajoGrim <= arribaPlat + overlapY)
+    {
+        posicion.y -= overlapY;
+        velocidadY = 0;
+        saltando = false;
+        subiendo = false;
+        enPlataforma = true;
+        pisoActual = arribaPlat;
+        hitbox.Sincro(posicion);
+        return;
+    }
+
+    //choca contra el techo, no permite atravesar desde abajo
+    if (velocidadY < 0 && arribaGrim >= abajoPlat - overlapY)
+    {
+        posicion.y += overlapY;
+        velocidadY = 0;
+        subiendo = false;
+        hitbox.Sincro(posicion);
+        return;
+    }
+
+    //colision izquierda
+    if (rGrim.x + rGrim.width > rPlat.x && rGrim.x < rPlat.x)
+    {
+        posicion.x = rPlat.x - rGrim.width - 30.0f;
+        hitbox.Sincro(posicion);
+        return;
+    }
+
+    //colision derecha - rebota (falta ver alguna solucion para esto)
+    if (rGrim.x < rPlat.x + rPlat.width && rGrim.x + rGrim.width > rPlat.x + rPlat.width)
+    {
+        posicion.x = rPlat.x + rPlat.width;
+        hitbox.Sincro(posicion);
+        return;
+    }
 }
 
 void Grim::Saltar() {
@@ -93,6 +194,7 @@ void Grim::Saltar() {
     if (!saltando) {
         saltando = true;
         subiendo = true;
+        posInicioSalto = posicion.y;
         PlaySound(salto);
     }
 }
@@ -108,18 +210,20 @@ void Grim::Salto(){
             //velocidad del salto - que tantos pixeles "sube" por unidad de tiempo
             posicion.y -= velocidadSalto;
 
-            //pisoY - alturaSalto = controlo la "altura" del salto - con los valores fijos actuales "salta" hasta y=420 (noice)
-            if (posicion.y <= pisoY - alturaSalto) 
+            //posInicioSalto - alturaSalto = controlo la "altura" del salto - con los valores fijos actuales "salta" hasta y=420 (noice)
+            if (posicion.y <= posInicioSalto - alturaSalto)
                 subiendo = false;   //si llego al limite indicado por la altura del salto, termino de subir
         }
 
         else {
             //si ya llego al limite, subiendo = false (cambia el control del segundo if)
             //ahora se suma la posicion actual y la velocidad para moverlo hacia abajo
-            posicion.y += velocidadSalto;
+            if (!enPlataforma) {    //se fija si no esta en la plataforma
+                posicion.y += velocidadSalto;
+            }
 
-            if (posicion.y >= pisoY) { //es decir, si ya llego al piso
-                posicion.y = pisoY; //evita que el Grim se hunda en el piso - el final del salto lo coloca en y = 500 sin importar la suma de velocidadSalto (basicamente es un control de colision con el piso)
+            if (posicion.y >= pisoBase) { //es decir, si ya llego al piso
+                posicion.y = pisoBase; //evita que el Grim se hunda en el piso - el final del salto lo coloca en y = valor sin importar la suma de velocidadSalto (basicamente es un control de colision con el piso)
                 saltando = false;   //ya no esta saltando, puede volver a saltar
             }
         }

@@ -7,6 +7,12 @@ Hitbox::Hitbox(float ancho, float alto, Vector2 off, bool dbg)
     hbox = { 0, 0, ancho, alto };
 }
 
+Hitbox::Hitbox()
+    : offset({ 0,0 }), debug(false)
+{
+    hbox = { 0, 0, 0, 0 };
+}
+
 void Hitbox::Sincro(Vector2 posSprite)
 {
     //toma la posicion del sprite y la sincroniza con la hbox

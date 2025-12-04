@@ -12,9 +12,9 @@ private:
 	float escala;
 	Vector2 posicion;
 
-	Hitbox hitbox;
-
 public:
+
+	Hitbox hitbox;
 
 	Plataforma(const string rutaTextura, float escala, Vector2 posicion);
 	~Plataforma();
@@ -22,4 +22,6 @@ public:
 	void Dibujar();
 
 	const Hitbox& GetHitbox() const { return hitbox; }
+
+	Vector2 GetPosicion() const { return posicion; }
 };

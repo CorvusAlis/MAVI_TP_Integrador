@@ -157,6 +157,7 @@ xcopy "$(SolutionDir)..\lib\vld\64-bit\Microsoft.DTfW.DHL.manifest" "$(OutDir)" 
     <ClCompile Include="grim.cpp" />
     <ClCompile Include="hitbox.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pantallas.cpp" />
     <ClCompile Include="meta.cpp" />
     <ClCompile Include="plataforma.cpp" />
   </ItemGroup>
@@ -164,6 +165,7 @@ xcopy "$(SolutionDir)..\lib\vld\64-bit\Microsoft.DTfW.DHL.manifest" "$(OutDir)" 
     <ClInclude Include="enemigo.h" />
     <ClInclude Include="grim.h" />
     <ClInclude Include="hitbox.h" />
+    <ClInclude Include="pantallas.h" />
     <ClInclude Include="meta.h" />
     <ClInclude Include="plataforma.h" />
   </ItemGroup>

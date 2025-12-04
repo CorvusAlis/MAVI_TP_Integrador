@@ -3,8 +3,7 @@
 using namespace std;
 
 Plataforma::Plataforma(const string rutaTextura, float escala, Vector2 posicion) :
-	escala(escala), posicion(posicion),
-	hitbox(60, 70, { 10, 0 }, true)
+	escala(escala), posicion(posicion)
 {
 	textura = LoadTexture(rutaTextura.c_str());
 	SetTextureFilter(textura, TEXTURE_FILTER_POINT);

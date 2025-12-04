@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "hitbox.h"
+#include "plataforma.h"
 
 #include <string>
 
@@ -26,7 +27,12 @@ private:
 	bool subiendo;
 	float alturaSalto;
 	float velocidadSalto;
-	float pisoY;
+	float velocidadY;   // velocidad vertical actual
+	float gravedad;     // aceleración hacia abajo
+	float posInicioSalto;
+	float pisoBase;
+	float pisoActual;
+	bool enPlataforma = false;
 
 	//atributos de sonido
 	Sound salto;
@@ -41,7 +47,7 @@ public:
 		float escala = 1.0f, float rotacion = 0.0f,
 		bool direccion = true, bool mostrando = true, float vel = 3.0f,
 		bool saltando = false, bool subiendo = false,
-		float alturaSalto = 125.0f, float velocidadSalto = 7.0f, float pisoY = 600.0f);
+		float alturaSalto = 125.0f, float velocidadSalto = 7.0f, float pisoBase = 700.0f);
 
 
 	//destructor
@@ -61,7 +67,9 @@ public:
 
 	//controlador principal de movimiento
 	//movimiento con flecjhas derecha e izquierda - salto con barra de espacio - reiinicio de posicion con R
-	void ActualizarPos();	
+	void ActualizarPos(const Plataforma plataformas[], int cantidad);
+
+	void ColisionPlataforma(const Plataforma& plataforma);
 
 	void MostrarInfo(Vector2 posicionInf);	//mostrar y ocultar coordenadas de posicion con M
 
