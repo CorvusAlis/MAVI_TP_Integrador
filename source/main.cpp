@@ -134,7 +134,7 @@ int main(void)
         if (pantallas.reiniciarJuego)
         {
             //Reiniciar posicion de Grim
-            grim.SetPosicion({ 300, 500 });
+            grim.SetPosicion({ 840, 750 });
 
             //Reiniciar posicion de enemigos
             for (int i = 0; i < 4; i++) {

@@ -16,8 +16,8 @@ private:
 
 public:
     bool reiniciarJuego;
-    //Texture2D grimMenuTex;
-    //Texture2D metaMenuTex;
+    Texture2D grimMenuTex;
+    Texture2D metaMenuTex;
 
     Pantallas();
     ~Pantallas();
@@ -25,9 +25,9 @@ public:
     void SetEstado(EstadoPantalla nuevoEstado);
     EstadoPantalla GetEstado() const;
 
-    //cargar las texturas en el menu esta dando problemas - quizas en otro momento lo arregle, por ahora el menu queda sin dibujos
-    //void CargarTexturas();
-    //void DescargarTexturas();
+    //creo que cargar las texturas en el menu esta dando problemas - ver excepcion
+    void CargarTexturas();
+    void DescargarTexturas();
 
     void Dibujar();
 

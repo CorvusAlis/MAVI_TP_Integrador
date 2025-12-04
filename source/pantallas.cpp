@@ -7,8 +7,8 @@ Pantallas::Pantallas()
     reiniciarJuego = false;
 
     //se cargan las texturas en el metodo CargarTexturas()
-    //grimMenuTex = { 0 };
-    //metaMenuTex = { 0 };
+    grimMenuTex = { 0 };
+    metaMenuTex = { 0 };
 }
 
 Pantallas::~Pantallas()
@@ -18,17 +18,17 @@ Pantallas::~Pantallas()
     //UnloadTexture(metaMenuTex);
 }
 
-//void Pantallas::CargarTexturas()
-//{
-//    grimMenuTex = LoadTexture("assets/images/grim.png");
-//    metaMenuTex = LoadTexture("assets/images/flame.png");
-//}
-//
-//void Pantallas::DescargarTexturas()
-//{
-//    if (grimMenuTex.id != 0) UnloadTexture(grimMenuTex);
-//    if (metaMenuTex.id != 0) UnloadTexture(metaMenuTex);
-//}
+void Pantallas::CargarTexturas()
+{
+    grimMenuTex = LoadTexture("assets/images/grim.png");
+    metaMenuTex = LoadTexture("assets/images/flame.png");
+}
+
+void Pantallas::DescargarTexturas()
+{
+    if (grimMenuTex.id != 0) UnloadTexture(grimMenuTex);
+    if (metaMenuTex.id != 0) UnloadTexture(metaMenuTex);
+}
 
 void Pantallas::SetEstado(EstadoPantalla nuevoEstado)
 {
@@ -65,33 +65,33 @@ void Pantallas::Dibujar()
 void Pantallas::DibujarMenu()
 {
     ClearBackground(BLACK);
-    //CargarTexturas();
+    CargarTexturas();
     int screenW = GetScreenWidth();
     int screenH = GetScreenHeight();
 
-    /*float escalaGrim = 300.0f / grimMenuTex.height;
-    float escalaMeta = 150.0f / metaMenuTex.height;*/
+    float escalaGrim = 300.0f / grimMenuTex.height;
+    float escalaMeta = 150.0f / metaMenuTex.height;
 
     float offsetY = 300.0f;
 
-    ////dibuja a Grim a la izquierda
-    //DrawTextureEx(
-    //    grimMenuTex,
-    //    { 120.0f, screenH / 2.0f - (grimMenuTex.height * escalaGrim) / 2.0f + offsetY },
-    //    0.0f,
-    //    escalaGrim,
-    //    Fade(WHITE, 0.85f)
-    //);
+    //dibuja a Grim a la izquierda
+    DrawTextureEx(
+        grimMenuTex,
+        { 120.0f, screenH / 2.0f - (grimMenuTex.height * escalaGrim) / 2.0f + offsetY },
+        0.0f,
+        escalaGrim,
+        Fade(WHITE, 0.85f)
+    );
 
-    ////dibuja llamas a la derecha
-    //DrawTextureEx(
-    //    metaMenuTex,
-    //    { screenW - 120.0f - (metaMenuTex.width * escalaMeta),
-    //      screenH / 2.0f - (metaMenuTex.height * escalaMeta) / 2.0f + offsetY },
-    //    0.0f,
-    //    escalaMeta,
-    //    Fade(WHITE, 0.85f)
-    //);
+    //dibuja llamas a la derecha
+    DrawTextureEx(
+        metaMenuTex,
+        { screenW - 120.0f - (metaMenuTex.width * escalaMeta),
+          screenH / 2.0f - (metaMenuTex.height * escalaMeta) / 2.0f + offsetY },
+        0.0f,
+        escalaMeta,
+        Fade(WHITE, 0.85f)
+    );
 
     const char* titulo = "GRIM: EL ATRAPA-ALMAS";
     DrawText(titulo,
@@ -136,8 +136,8 @@ void Pantallas::DibujarMenu()
 
     if (hoverSalir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
+        DescargarTexturas();
         CloseWindow(); // Cierra el programa
-        //DescargarTexturas();
     }
 }
 
